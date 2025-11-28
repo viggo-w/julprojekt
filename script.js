@@ -3,13 +3,16 @@ var x, y;
 var vY = 0;
 
 var g = 0.7; // detta är tyngaccelerationen räknat i hasitghetsskillnad per frame alltså hur mycket hastigheten kommer att ändra sig varje frame
-var jumpStrength = -15; // detta är den initiala hastigheten på hoppen (kommer att minsta till 0 när bollen har nått toppen)
+var jumpStrength = -20; // detta är den initiala hastigheten på hoppen (kommer att minsta till 0 när bollen har nått toppen)
 
 var groundY = 500; // marknivå
 var isJumping = false; // är true om man är i ett hopp
 
 var hinder_x = [];
 var hinder_y = [];
+
+var start_speed = 5;
+var dx = start_speed;
 
 function start() {
     c = document.getElementById("canvas1");
@@ -22,12 +25,12 @@ function start() {
 
 
     window.addEventListener("keydown", keyPress);
-    setInterval(update, 15);
+    setInterval(update, 5); // 15
 
 
 
 
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 2; i++) {
 
     hinder_x.push(barrier_coordinates_x());
     hinder_y.push(barrier_coordinates_y());
@@ -51,9 +54,8 @@ function keyPress(e) {
 function barrier_coordinates_x() {
     var x = 0;
 
-    while (x < 200) {
-        x = Math.floor(Math.random() * c.width);
-    }
+    x = Math.floor(Math.random() * 300) + 400;
+    
     
     return x;
 
@@ -74,7 +76,7 @@ function barrier_coordinates_y() {
 
 function update() {
 
-    x += 5;
+    x += dx;
 
     ctx.clearRect(0, 0, c.width, c.height);
 
@@ -113,13 +115,22 @@ function update() {
         
         if (x >= hinder_x[i]-25 && x <= hinder_x[i]+50 && y >= 500-hinder_y[i]) {
             x = 50;
+            dx = start_speed; // så att riktningen alltid blir samma när man startar om
+
             alert(y);
         }
-
-
-
     }
 
+    // gör så att spelaren studsar tilbaka om den träffar väggen
+    if (x >= c.width-30 || x <= 0) {
+        dx = -dx;
+    }
+
+    /*
+    if (y <= 30) {
+        vY = -vY;
+    }
+        */
 
     //ctx.fillRect(400 ,430, 50, 70);
 
