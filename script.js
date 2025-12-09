@@ -15,6 +15,9 @@ var hinder_y = [];
 var start_speed = 5; // starthasighet för x-led
 var dx = start_speed;
 
+var tid;
+var start_tid; // t
+
 // körs när man öppnar sidan
 function start() {
     c = document.getElementById("canvas1");
@@ -23,7 +26,14 @@ function start() {
     x = 50; // sätter startpositionen i x-led för spelaren
     y = groundY; // sätter startpositionen i y-led för spelaren
 
+
+    tid_text = document.getElementById("tid");
+
     window.addEventListener("keydown", keyPress); // lägger till en listner så att den kan känna av och köra keyPress() när man trycker på mellanslag
+    
+    start_tid = Date.now(); // start-tiden
+
+
     setInterval(update, 5); // Anger hur ofta update()-funktionen ska köras
 
 
@@ -72,6 +82,8 @@ function barrier_coordinates_y() {
 
 function update() {
 
+    tid = ((Date.now() - start_tid) / 1000).toFixed(2); // tar nuvarande tiden - start-tiden för att få hur mycket tid som har gått sen start. delar också med 1000 för att omvandla från millisekunder till sekunder
+    
     x += dx; // ändrar spelaren x-koordinat med dx för att få den att röra sig i x-led
 
     ctx.clearRect(0, 0, c.width, c.height); // tar bort allt ritat på skärmen
@@ -90,6 +102,13 @@ function update() {
         isJumping = false; // ändrar isJumping till falskt för att signalera att man inte längre är i luften
     }
 
+
+    // skriver tiden
+    ctx.fillStyle = "white";
+    ctx.font = "30px Monospace";
+    ctx.fillText("Tid: " + tid + "s", 15, 40);
+
+
     // ritar kuben
     ctx.fillStyle = "red"; // ändrar så kubens färg blir röd
     ctx.fillRect(x, y-30, 30, 30); // ritar kuben
@@ -104,7 +123,8 @@ function update() {
             x = 50; // flyttar spelaren till startpositionen
             dx = start_speed; // så att riktningen alltid blir samma när man startar om
 
-            alert(y);
+            alert("Du dog! Din sluttid blev: " + tid + " sekunder. Tryck på OK för att spela igen.");
+            start_tid = Date.now();
         }
     }
 
