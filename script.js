@@ -37,7 +37,7 @@ function start() {
     setInterval(update, 5); // Anger hur ofta update()-funktionen ska köras
 
 
-
+    
 
     // loppar igenom tre gånger (för att få tre hinder)
     for (var i = 0; i < 3; i++) {
@@ -78,6 +78,21 @@ function barrier_coordinates_y() {
 }
 
 
+// Tar in ett antal sekunder och delar upp det i minuter. t.ex. 90 sekunder -> 1 minut och 30 sekunder
+function minuter_sekunder(sekunder) {
+    var antal_minuter = sekunder/60;
+    var antal_sekunder;
+
+    antal_sekunder = sekunder % 60;
+
+    if (antal_minuter < 1) {
+        antal_minuter = 0;
+    }
+
+    return Math.round(antal_minuter) + " min, " + antal_sekunder.toFixed(2) + "s";
+
+}
+
 
 
 function update() {
@@ -106,7 +121,8 @@ function update() {
     // skriver tiden
     ctx.fillStyle = "white";
     ctx.font = "30px Monospace";
-    ctx.fillText("Tid: " + tid + "s", 15, 40);
+    //ctx.fillText("Tid: " + tid + "s", 15, 40);
+    ctx.fillText(minuter_sekunder(tid), 15, 40);
 
 
     // ritar kuben
@@ -114,6 +130,7 @@ function update() {
     ctx.fillRect(x, y-30, 30, 30); // ritar kuben
     ctx.fillStyle = "green"; // gör färgen grön igen så att hinderna blir gröna
 
+    
 
     for (var i = 0; i < hinder_x.length; i++) { // loopar igenom alla hinder
         ctx.fillRect(hinder_x[i], 500-hinder_y[i] , 50, hinder_y[i]); // ritar hindrerna på koordinaterna som finns i listorna
@@ -127,6 +144,8 @@ function update() {
             start_tid = Date.now();
         }
     }
+
+    
 
     // gör så att spelaren studsar tilbaka om den träffar väggen
     if (x >= c.width-30 || x <= 0) {
